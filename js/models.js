@@ -78,6 +78,7 @@ class StoryList {
       data: { token, story: { title, author, url } },
     });
     const story = new Story(response.data.story);
+    console.log(response);
     this.stories.unshift(story);
     user.ownStories.unshift(story);
 

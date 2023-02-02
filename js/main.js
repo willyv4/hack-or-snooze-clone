@@ -4,6 +4,9 @@
 
 const $body = $("body");
 
+const $addStory = $("#add-story");
+const $submitStory = $("#submit-story");
+
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
 
