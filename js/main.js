@@ -7,6 +7,9 @@ const $body = $("body");
 const $addStory = $("#add-story");
 const $submitStory = $("#submit-story");
 
+const $addFavs = $("#add-favs");
+const $star = $(".fa-star");
+
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
 

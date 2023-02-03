@@ -41,3 +41,9 @@ function submitNewStory() {
 }
 
 $addStory.on("click", submitNewStory);
+
+// function addFavorites() {
+//   hidePageComponents();
+// }
+
+// $addFavs.on("click", addFavorites);

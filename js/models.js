@@ -78,16 +78,12 @@ class StoryList {
       data: { token, story: { title, author, url } },
     });
     const story = new Story(response.data.story);
-    console.log(response);
     this.stories.unshift(story);
     user.ownStories.unshift(story);
 
     return story;
   }
 }
-
-// let newStory = new StoryList();
-// console.log(newStory.addStory());
 
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -106,6 +102,7 @@ class User {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
+    this.favoriteStory();
 
     // instantiate Story instances for the user's favorites and ownStories
     this.favorites = favorites.map((s) => new Story(s));
@@ -198,5 +195,16 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+  }
+
+  async changeFavorites(newState, story) {
+    const method = newState === "add" ? "POST" : "DELETE";
+    const token = this.loginToken;
+    const response = await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      method: method,
+      data: { token },
+    });
+    console.log(response);
   }
 }
