@@ -9,6 +9,12 @@ const $submitStory = $("#submit-story");
 
 const $addFavs = $("#add-favs");
 const $star = $(".fa-star");
+const $favsList = $("#fav-stories-list");
+
+const $storiesLists = $(".stories-list");
+
+const $userStory = $("#add-mine");
+const $myStories = $("#my-stories-list");
 
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");

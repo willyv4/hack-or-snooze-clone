@@ -102,7 +102,6 @@ class User {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
-    this.favoriteStory();
 
     // instantiate Story instances for the user's favorites and ownStories
     this.favorites = favorites.map((s) => new Story(s));
@@ -111,7 +110,6 @@ class User {
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
   }
-
   /** Register new user in API, make User instance & return it.
    *
    * - username: a new username
@@ -197,14 +195,33 @@ class User {
     }
   }
 
-  async changeFavorites(newState, story) {
-    const method = newState === "add" ? "POST" : "DELETE";
+  addFav(story) {
+    this.favorites.push(story);
+  }
+
+  unFav(story) {
+    this.favorites = this.favorites.filter(
+      (currentFav) => currentFav.storyId !== story.storyId
+    );
+    console.log("deleted");
+  }
+
+  async updateFavorites(controlFav, story) {
+    let method = controlFav === "add" ? "POST" : "DELETE";
     const token = this.loginToken;
     const response = await axios({
       url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
       method: method,
       data: { token },
     });
+
+    controlFav === "add" ? this.addFav(story) : this.unFav(story);
     console.log(response);
+    console.log(this.favorites);
+  }
+
+  getFavorites(story) {
+    console.log(story);
+    return this.favorites.some((s) => s.storyId === story.storyId);
   }
 }

@@ -10,6 +10,7 @@ function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
   putStoriesOnPage();
+  $favsList.hide();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -42,8 +43,19 @@ function submitNewStory() {
 
 $addStory.on("click", submitNewStory);
 
-// function addFavorites() {
-//   hidePageComponents();
-// }
+function seeFavorites() {
+  hidePageComponents();
+  addFavsUI();
+  $favsList.show();
+  $myStories.hide();
+}
+$addFavs.on("click", seeFavorites);
 
-// $addFavs.on("click", addFavorites);
+function seeUserAdded() {
+  hidePageComponents();
+  addUserStories();
+  $myStories.show();
+  $favsList.hide();
+}
+
+$userStory.on("click", seeUserAdded);
