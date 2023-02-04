@@ -12,6 +12,7 @@ const $star = $(".fa-star");
 const $favsList = $("#fav-stories-list");
 
 const $storiesLists = $(".stories-list");
+const $trash = $(".fas fa-trash-alt");
 
 const $userStory = $("#add-mine");
 const $myStories = $("#my-stories-list");

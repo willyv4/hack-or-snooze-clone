@@ -1,8 +1,18 @@
 /* Lists of stories */
 
-.stories-list {
+.stories-list{
   margin: 20px 5px;
+
 }
+
+.stories-list .trash{
+  display: none;
+}
+
+.my .trash {
+  display: contents;
+}
+
 
 .stories-list > li {
   color: gray;
@@ -37,3 +47,5 @@
 .story-user {
   display: block;
 }
+
+

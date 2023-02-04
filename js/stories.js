@@ -20,12 +20,14 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
+  console.debug("generateStoryMarkup");
   const showStar = Boolean(currentUser);
+  const isUsersStory = Boolean(currentUser);
 
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+      ${isUsersStory ? takeOutTrash(story, currentUser) : ""}
       ${showStar ? getStarHTML(story, currentUser) : ""}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
@@ -34,18 +36,24 @@ function generateStoryMarkup(story) {
         <small class="story-author">by ${story.author}</small>
         <small class="story-user">posted by ${story.username}</small>
       </li>
-    `);
+      `);
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
-// ready code to understand try implementing in another way
+function takeOutTrash(story, user) {
+  const stories = user.userStory(story);
+  const showTrashCan = stories ? "fas fa-trash-alt" : "";
+  return `<span class="trash">
+  <i class="${showTrashCan}"></i>
+</span>`;
+}
+
 function getStarHTML(story, user) {
-  const isFavorite = user.getFavorites(story);
-  const starType = isFavorite ? "fas" : "far";
-  return `
-      <span class="star">
-        <i class="${starType} fa-star"></i>
-      </span>`;
+  const fav = user.getFavorites(story);
+  const starType = fav ? "fas" : "far";
+  return `<span class="star">
+  <i class="${starType} fa-star"></i>
+</span>`;
 }
 
 function putStoriesOnPage() {
@@ -116,11 +124,34 @@ async function controlFav(event) {
   const storyId = $target.parent().parent().attr("id");
   const story = storyList.stories.find((story) => story.storyId === storyId);
 
-  $target.hasClass("fas")
-    ? (await currentUser.updateFavorites("delete", story)) &&
-      $target.closest("i").toggleClass("fas far")
-    : (await currentUser.updateFavorites("add", story)) &&
-      $target.closest("i").toggleClass("fas far");
+  if ($target.hasClass("fas")) {
+    await currentUser.updateFavorites("delete", story);
+    $target.closest("i").toggleClass("fas far");
+  } else {
+    await currentUser.updateFavorites("add", story);
+    $target.closest("i").toggleClass("fas far");
+  }
 }
 
 $storiesLists.on("click", ".star", controlFav);
+
+async function deleteUserStory(event) {
+  let $target = $(event.target);
+  const $storyElement = $target.parent().parent();
+  const storyId = $storyElement.attr("id");
+  const story = storyList.stories.find((story) => story.storyId === storyId);
+  await currentUser.deleteStory(story);
+  $storyElement.remove();
+
+  await putStoriesOnPage();
+
+  $("#all-stories-list")
+    .find("li")
+    .each(function () {
+      if ($(this).attr("id") === storyId) {
+        $(this).remove();
+      }
+    });
+}
+
+$myStories.on("click", ".trash", deleteUserStory);

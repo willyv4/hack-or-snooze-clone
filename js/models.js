@@ -203,7 +203,6 @@ class User {
     this.favorites = this.favorites.filter(
       (currentFav) => currentFav.storyId !== story.storyId
     );
-    console.log("deleted");
   }
 
   async updateFavorites(controlFav, story) {
@@ -221,7 +220,20 @@ class User {
   }
 
   getFavorites(story) {
-    console.log(story);
     return this.favorites.some((s) => s.storyId === story.storyId);
+  }
+
+  async deleteStory(story) {
+    const token = this.loginToken;
+    const response = await axios({
+      url: `${BASE_URL}/stories/${story.storyId}`,
+      method: "DELETE",
+      data: { token },
+    });
+    console.log(response);
+  }
+
+  userStory(story) {
+    return this.ownStories.some((s) => s.storyId === story.storyId);
   }
 }

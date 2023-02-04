@@ -39,6 +39,7 @@ function updateNavOnLogin() {
 function submitNewStory() {
   console.debug("submitNewStory");
   $submitStory.show();
+  $myStories.hide();
 }
 
 $addStory.on("click", submitNewStory);
