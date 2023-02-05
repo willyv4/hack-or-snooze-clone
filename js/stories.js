@@ -69,6 +69,19 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
+async function deleteUserStory(event) {
+  console.debug("deleteUserStory");
+  let $target = $(event.target);
+  const $storyElement = $target.closest("li");
+  const storyId = $storyElement.attr("id");
+
+  await storyList.deleteStory(currentUser, storyId);
+
+  await addUserStories();
+}
+
+$myStories.on("click", ".trash", deleteUserStory);
+
 async function addNewStory(e) {
   console.debug("addNewStory");
   e.preventDefault();
@@ -87,7 +100,7 @@ async function addNewStory(e) {
   $allStoriesList.prepend($story);
   console.log(newStory);
 
-  $submitStory.hide();
+  $submitStory.slideUp("slow");
   $submitStory.trigger("reset");
 }
 
@@ -110,11 +123,12 @@ function addUserStories() {
   if (currentUser.ownStories.length === 0) {
     $myStories.append("<h4>No Favorites added</h4>");
   } else {
-    for (const story of currentUser.ownStories) {
-      const $storyMarkup = generateStoryMarkup(story);
+    for (let story of currentUser.ownStories) {
+      let $storyMarkup = generateStoryMarkup(story);
       $myStories.append($storyMarkup);
     }
   }
+  $myStories.show();
 }
 
 async function controlFav(event) {
@@ -134,24 +148,3 @@ async function controlFav(event) {
 }
 
 $storiesLists.on("click", ".star", controlFav);
-
-async function deleteUserStory(event) {
-  let $target = $(event.target);
-  const $storyElement = $target.parent().parent();
-  const storyId = $storyElement.attr("id");
-  const story = storyList.stories.find((story) => story.storyId === storyId);
-  await currentUser.deleteStory(story);
-  $storyElement.remove();
-
-  await putStoriesOnPage();
-
-  $("#all-stories-list")
-    .find("li")
-    .each(function () {
-      if ($(this).attr("id") === storyId) {
-        $(this).remove();
-      }
-    });
-}
-
-$myStories.on("click", ".trash", deleteUserStory);

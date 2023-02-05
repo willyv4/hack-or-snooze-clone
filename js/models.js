@@ -83,6 +83,20 @@ class StoryList {
 
     return story;
   }
+
+  async deleteStory(user, storyId) {
+    const response = await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: "DELETE",
+      data: { token: user.loginToken },
+    });
+    console.log(response);
+
+    this.stories = this.stories.filter((story) => story.storyId !== storyId);
+
+    user.ownStories = user.ownStories.filter((s) => s.storyId !== storyId);
+    user.favorites = user.favorites.filter((s) => s.storyId !== storyId);
+  }
 }
 
 /******************************************************************************
@@ -221,16 +235,6 @@ class User {
 
   getFavorites(story) {
     return this.favorites.some((s) => s.storyId === story.storyId);
-  }
-
-  async deleteStory(story) {
-    const token = this.loginToken;
-    const response = await axios({
-      url: `${BASE_URL}/stories/${story.storyId}`,
-      method: "DELETE",
-      data: { token },
-    });
-    console.log(response);
   }
 
   userStory(story) {
