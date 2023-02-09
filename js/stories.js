@@ -121,7 +121,7 @@ function addFavsUI() {
 function addUserStories() {
   $myStories.empty();
   if (currentUser.ownStories.length === 0) {
-    $myStories.append("<h4>No Favorites added</h4>");
+    $myStories.append("<h4>You haven't added any stories</h4>");
   } else {
     for (let story of currentUser.ownStories) {
       let $storyMarkup = generateStoryMarkup(story);
